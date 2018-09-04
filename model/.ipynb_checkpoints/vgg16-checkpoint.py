@@ -213,4 +213,5 @@ def VGG16(include_top=True,
     elif weights is not None:
         model.load_weights(weights)
 
+    model.compile(optimizer=RMSprop(lr=0.0001), loss=bce, metrics=[])
     return model

@@ -2,8 +2,9 @@
 input/valid/*
 input/test/*
 output/*
+checkpoint/*
 !README.md
-logs/
+logs/*
 .vscode/
 
 # Byte-compiled / optimized / DLL files

@@ -26,23 +26,40 @@ def get_session():
 KTF.set_session(get_session())
 # ###############################
 
-input_size = params.input_size
-epochs = params.max_epochs
-batch_size = params.batch_size
+def load_labels(labels_dir=params.labels_dir):
+    """
+    return example:
+    {
+        'video1_0001.jpg': {
+            'class': 0,
+            'frame_num': 1
+        },
+        'video1_0002.jpg': {
+            'class': 1,
+            'frame_num': 11
+        }
+    }
+    """
+    labels = {}
+    data = pd.read_csv(labels_dir)
+    for index, row in data.iterrows():
+        labels[row['filename']] = {
+            'class': row['class'],
+            'frame_num': row['frame_num']
+        }
+    return labels
 
-model = params.model_factory(input_shape=(input_size,input_size,3))
 
-folder_mask = 'input/masks/'
+model = params.model_factory(input_shape=params.input_shape)
+labels = load_labels()
 
-folder_in = 'input/train/'
-ids_train_split = glob.glob(folder_in+"*.*")
+ids_train_split = glob.glob(params.folder_train+"*.*")
+ids_valid_split = glob.glob(params.folder_val+"*.*")
 
-folder_val = 'input/valid/'
-ids_valid_split = glob.glob(folder_val+"*.*")
 
 print('Training on {} samples'.format(len(ids_train_split)))
 print('Validating on {} samples'.format(len(ids_valid_split)))
-print('Input net : {}x{}'.format(input_size,input_size))
+print('Input net : {}'.format(params.image_size))
 
 
 ### THIS NEED CHANGE A LOT
@@ -55,11 +72,11 @@ def generator(is_train_generator=True):
             randomTranspose
         ]
         ids_split = ids_train_split
-        folder = folder_in
+        folder = params.folder_train
     else:
         augmentation_functions = []
         ids_split = ids_valid_split
-        folder = folder_val
+        folder = params.folder_valid
         
     while True:
         for start in range(0, len(ids_split), batch_size):
@@ -67,23 +84,19 @@ def generator(is_train_generator=True):
             y_batch = []
             end = min(start + batch_size, len(ids_split))
             ids_batch = ids_split[start:end]
-            for id in ids_batch:
-                img = imread(id)
-                img = cv2.resize(img, (input_size, input_size))
-                file_name = id[len(folder):]
-                mask = imread('input/masks/{}.gif'.format(file_name))
-                mask = 255-mask
-                mask = cv2.resize(mask, (input_size, input_size))
+            for fname in ids_batch:
+                img = imread(fname)
+                img = cv2.resize(img, params.image_size)
+                img_class = labels[fname]['class']
                 
                 for func in augmentation_functions:
-                    img, mask = func(img, mask)
+                    img = func(img)
     
-                mask = np.expand_dims(mask, axis=2)
                 x_batch.append(img)
-                y_batch.append(mask)
+                y_batch.append(img_class)
             x_batch = np.array(x_batch, np.float32) / 255
-            y_batch = np.array(y_batch, np.float32) / 255
             yield x_batch, y_batch
+
 
 callbacks = [EarlyStopping(monitor='val_loss',
                            patience=10,
@@ -95,9 +108,8 @@ callbacks = [EarlyStopping(monitor='val_loss',
                                verbose=1,
                                min_delta=1e-4),
              ModelCheckpoint(monitor='val_loss',
-                             filepath='weights/weights.hdf5',
-                             save_best_only=True,
-                             save_weights_only=True)
+                             filepath='checkpoint/model.h5',
+                             save_best_only=True)
             ]
 
 model.fit_generator(generator=generator(is_train_generator=True),
