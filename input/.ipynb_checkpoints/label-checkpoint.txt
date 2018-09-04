@@ -1,0 +1,8 @@
+frame,label,frame_number
+actionclipautoautotrain00001_0001.jpg,0,1
+actionclipautoautotrain00001_0002.jpg,0,11
+actionclipautoautotrain00001_0003.jpg,0,21
+actionclipautoautotrain00001_0004.jpg,1,31
+actionclipautoautotrain00001_0005.jpg,1,41
+actionclipautoautotrain00001_0006.jpg,1,51
+actionclipautoautotrain00001_0007.jpg,0,61
