@@ -5,10 +5,10 @@ folder_val = 'input/valid/'
 folder_test = 'input/test/'
 labels_dir = 'input/labels.txt'
 
-image_size = (227, 128)
+image_size = (242, 128)
 input_shape = image_size + (3,)
 
-max_epochs = 100
+max_epochs = 250
 batch_size = 4
 
 threshold = 0.5
