@@ -1,14 +1,14 @@
-input/*/*
-output/*
-checkpoint/*
-!README.md
-
 # Exception for example
 !input/train/actionclipautoautotrain00001_0002.jpg
 !input/test/actionclipautoautotrain00001_0002.jpg
 !input/valid/actionclipautoautotrain00001_0002.jpg
 !input/videos/actionclipautoautotrain00001.avi
 !input/xml-labels/actionclipautoautotrain00016.xml
+
+input/*/*
+output/*
+checkpoint/*
+!README.md
 
 # VSCode
 .vscode/
