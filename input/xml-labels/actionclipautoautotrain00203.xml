@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+  <version>1.0</version>
+  <meta>
+    <task>
+      <id>18</id>
+      <name>actionclipautoautotrain00203</name>
+      <size>1356</size>
+      <mode>interpolation</mode>
+      <overlap>5</overlap>
+      <bugtracker></bugtracker>
+      <flipped>False</flipped>
+      <created>2018-09-04 05:10:26.913653+03:00</created>
+      <updated>2018-09-04 05:20:30.125868+03:00</updated>
+      <labels>
+        <label>
+          <name>danger</name>
+          <attributes>
+          </attributes>
+        </label>
+      </labels>
+      <segments>
+        <segment>
+          <id>18</id>
+          <start>0</start>
+          <stop>1355</stop>
+          <url>http://localhost:8080/?id=18</url>
+        </segment>
+      </segments>
+      <owner>
+        <username>admin</username>
+        <email></email>
+      </owner>
+      <original_size>
+        <width>512</width>
+        <height>352</height>
+      </original_size>
+    </task>
+    <dumped>2018-09-06 11:45:58.926797+03:00</dumped>
+  </meta>
+</annotations>
