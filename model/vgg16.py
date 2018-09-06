@@ -12,12 +12,9 @@ from __future__ import print_function
 
 import os
 
-from . import get_submodules_from_kwargs
-from . import imagenet_utils
-from .imagenet_utils import decode_predictions
-from .imagenet_utils import _obtain_input_shape
+from keras import backend, engine, layers, models, keras_utils, losses, metrics
+from keras.applications.imagenet_utils import _obtain_input_shape, decode_predictions
 
-preprocess_input = imagenet_utils.preprocess_input
 
 WEIGHTS_PATH = ('https://github.com/fchollet/deep-learning-models/'
                 'releases/download/v0.1/'
@@ -32,7 +29,7 @@ def VGG16(include_top=True,
           input_tensor=None,
           input_shape=None,
           pooling=None,
-          classes=2,
+          classes=1,
           **kwargs):
     """Instantiates the VGG16 architecture.
 
@@ -79,7 +76,6 @@ def VGG16(include_top=True,
         ValueError: in case of invalid argument for `weights`,
             or invalid input shape.
     """
-    backend, layers, models, keras_utils = get_submodules_from_kwargs(kwargs)
 
     if not (weights in {'imagenet', None} or os.path.exists(weights)):
         raise ValueError('The `weights` argument should be either '
@@ -87,9 +83,10 @@ def VGG16(include_top=True,
                          '(pre-training on ImageNet), '
                          'or the path to the weights file to be loaded.')
 
-    if weights == 'imagenet' and include_top and classes != 1000:
-        raise ValueError('If using `weights` as `"imagenet"` with `include_top`'
-                         ' as true, `classes` should be 1000')
+    # if weights == 'imagenet' and include_top and classes != 1000:
+    #     raise ValueError('If using `weights` as `"imagenet"` with `include_top`'
+    #                      ' as true, `classes` should be 1000')
+
     # Determine proper input shape
     input_shape = _obtain_input_shape(input_shape,
                                       default_size=224,
@@ -176,8 +173,12 @@ def VGG16(include_top=True,
         # Classification block
         x = layers.Flatten(name='flatten')(x)
         x = layers.Dense(4096, activation='relu', name='fc1')(x)
+        # x = layers.Dropout(0.2)(x)
         x = layers.Dense(4096, activation='relu', name='fc2')(x)
-        x = layers.Dense(classes, activation='softmax', name='predictions')(x)
+        # x = layers.Dropout(0.2)(x)
+        # x = layers.Dense(classes, activation='softmax', name='predictions')(x)
+        x = layers.Dense(1000, activation='softmax', name='predictions')(x)
+        output_tensor = layers.Dense(classes, activation='sigmoid', name='gemastik_predictions')
     else:
         if pooling == 'avg':
             x = layers.GlobalAveragePooling2D()(x)
@@ -213,5 +214,5 @@ def VGG16(include_top=True,
     elif weights is not None:
         model.load_weights(weights)
 
-    model.compile(optimizer=RMSprop(lr=0.0001), loss=bce, metrics=[])
+    model = models.Model(inputs, output_tensor, name='vgg16_gemastik')
     return model
