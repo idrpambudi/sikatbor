@@ -88,12 +88,12 @@ def VGG16(include_top=True,
     #                      ' as true, `classes` should be 1000')
 
     # Determine proper input shape
-    input_shape = _obtain_input_shape(input_shape,
-                                      default_size=224,
-                                      min_size=32,
-                                      data_format=backend.image_data_format(),
-                                      require_flatten=include_top,
-                                      weights=weights)
+    # input_shape = _obtain_input_shape(input_shape,
+    #                                   default_size=224,
+    #                                   min_size=32,
+    #                                   data_format=backend.image_data_format(),
+    #                                   require_flatten=include_top,
+    #                                   weights=weights)
 
     if input_tensor is None:
         img_input = layers.Input(shape=input_shape)
@@ -177,8 +177,8 @@ def VGG16(include_top=True,
         x = layers.Dense(4096, activation='relu', name='fc2')(x)
         # x = layers.Dropout(0.2)(x)
         # x = layers.Dense(classes, activation='softmax', name='predictions')(x)
+        output_tensor = layers.Dense(classes, activation='sigmoid', name='gemastik_predictions')(x)
         x = layers.Dense(1000, activation='softmax', name='predictions')(x)
-        output_tensor = layers.Dense(classes, activation='sigmoid', name='gemastik_predictions')
     else:
         if pooling == 'avg':
             x = layers.GlobalAveragePooling2D()(x)
