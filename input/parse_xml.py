@@ -46,6 +46,7 @@ for file in sorted(os.listdir(frame_samples_dir)):
         danger_frames_set = frames_dict[vid_name]
     except:
         print('XML file does not exists.')
+        labels_csv.write('{},{},{}\n'.format(filename, real_frame_no, label))
         continue
     
     if frame_sample_no in danger_frames_set:
