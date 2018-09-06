@@ -1,10 +1,16 @@
-#input/train/*
-input/valid/*
-input/test/*
+input/*/*
 output/*
 checkpoint/*
 !README.md
-logs/*
+
+# Exception for example
+!input/train/actionclipautoautotrain00001_0002.jpg
+!input/test/actionclipautoautotrain00001_0002.jpg
+!input/valid/actionclipautoautotrain00001_0002.jpg
+!input/videos/actionclipautoautotrain00001.avi
+!input/xml-labels/actionclipautoautotrain00016.xml
+
+# VSCode
 .vscode/
 
 # Byte-compiled / optimized / DLL files
