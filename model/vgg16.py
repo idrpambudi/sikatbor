@@ -12,8 +12,8 @@ from __future__ import print_function
 
 import os
 
-from keras import backend, engine, layers, models, keras_utils, losses, metrics
-from keras.applications.imagenet_utils import _obtain_input_shape, decode_predictions
+from keras import backend, engine, layers, models, utils, losses, metrics
+#from keras.applications.imagenet_utils import _obtain_input_shape, decode_predictions
 
 
 WEIGHTS_PATH = ('https://github.com/fchollet/deep-learning-models/'
@@ -24,12 +24,12 @@ WEIGHTS_PATH_NO_TOP = ('https://github.com/fchollet/deep-learning-models/'
                        'vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5')
 
 
-def VGG16(include_top=True,
-          weights='imagenet',
+def VGG16(include_top=False,
+          weights=None,
           input_tensor=None,
           input_shape=None,
           pooling=None,
-          classes=1,
+          classes=2,
           **kwargs):
     """Instantiates the VGG16 architecture.
 
@@ -169,50 +169,36 @@ def VGG16(include_top=True,
                       name='block5_conv3')(x)
     x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool')(x)
 
-    if include_top:
-        # Classification block
-        x = layers.Flatten(name='flatten')(x)
-        x = layers.Dense(4096, activation='relu', name='fc1')(x)
+ #   inputs = img_input
+ #   model = models.Model(inputs, x, name='vgg16')
+
+    x = layers.Flatten(name='flatten')(x)
+    x = layers.Dense(4096, activation='relu', name='fc1')(x)
         # x = layers.Dropout(0.2)(x)
-        x = layers.Dense(4096, activation='relu', name='fc2')(x)
+    x = layers.Dense(4096, activation='relu', name='fc2')(x)
         # x = layers.Dropout(0.2)(x)
         # x = layers.Dense(classes, activation='softmax', name='predictions')(x)
-        output_tensor = layers.Dense(classes, activation='sigmoid', name='gemastik_predictions')(x)
-        x = layers.Dense(1000, activation='softmax', name='predictions')(x)
-    else:
-        if pooling == 'avg':
-            x = layers.GlobalAveragePooling2D()(x)
-        elif pooling == 'max':
-            x = layers.GlobalMaxPooling2D()(x)
-
-    # Ensure that the model takes into account
-    # any potential predecessors of `input_tensor`.
-    if input_tensor is not None:
-        inputs = keras_utils.get_source_inputs(input_tensor)
-    else:
-        inputs = img_input
-    # Create model.
-    model = models.Model(inputs, x, name='vgg16')
+    output_tensor = layers.Dense(classes, activation='softmax', name='gemastik_predictions')(x)
 
     # Load weights.
     if weights == 'imagenet':
         if include_top:
-            weights_path = keras_utils.get_file(
+            weights_path = utils.get_file(
                 'vgg16_weights_tf_dim_ordering_tf_kernels.h5',
                 WEIGHTS_PATH,
                 cache_subdir='models',
                 file_hash='64373286793e3c8b2b4e3219cbf3544b')
         else:
-            weights_path = keras_utils.get_file(
+            weights_path = utils.get_file(
                 'vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5',
                 WEIGHTS_PATH_NO_TOP,
                 cache_subdir='models',
                 file_hash='6d6bbae143d832006294945121d1f1fc')
         model.load_weights(weights_path)
         if backend.backend() == 'theano':
-            keras_utils.convert_all_kernels_in_model(model)
+            utils.convert_all_kernels_in_model(model)
     elif weights is not None:
         model.load_weights(weights)
 
-    model = models.Model(inputs, output_tensor, name='vgg16_gemastik')
+    model = models.Model(img_input, output_tensor, name='vgg16_gemastik')
     return model

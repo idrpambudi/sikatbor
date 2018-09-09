@@ -63,3 +63,6 @@ def fmeasure(y_true, y_pred):
     Here it is only computed as a batch-wise average, not globally.
     """
     return fbeta_score(y_true, y_pred, beta=1)
+
+def floss(y_true, y_pred):
+    return 1-fbeta_score(y_true, y_pred)
