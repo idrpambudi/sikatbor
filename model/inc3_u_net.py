@@ -24,7 +24,7 @@ from keras import utils as keras_utils
 
 
 from keras.applications.imagenet_utils import _obtain_input_shape, decode_predictions
-from model.losses import bce_dice_loss, dice_loss, weighted_bce_dice_loss, weighted_dice_loss, dice_coeff, false_negative, false_negative_pixel
+from model.custom_losses import bce_dice_loss, dice_loss, weighted_bce_dice_loss, weighted_dice_loss, dice_coeff, false_negative, false_negative_pixel
 from keras.optimizers import RMSprop
 
 

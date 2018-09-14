@@ -10,7 +10,7 @@ from keras.utils import get_file
 from keras.optimizers import RMSprop
 from keras import Model
 
-from model.losses import bce_dice_loss, dice_loss, dice_coeff, \
+from model.custom_losses import bce_dice_loss, dice_loss, dice_coeff, \
                    false_negative, false_negative_pixel
 
 
