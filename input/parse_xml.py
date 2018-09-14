@@ -9,7 +9,7 @@ def get_danger_frame(xml_file):
     for track in root.iter('track'):
         for box in track.iter('box'):
             frame_no = int(box.attrib['frame'])
-            frame_sample_no = int(frame_no/10) + 1
+            frame_sample_no = int(frame_no/60) + 2
             result.add(frame_sample_no)
 
     return result
@@ -39,7 +39,7 @@ for file in sorted(os.listdir(frame_samples_dir)):
     split_filename = filename_no_ext.split('_')
     vid_name = split_filename[0]
     frame_sample_no = int(split_filename[1])
-    real_frame_no = (frame_sample_no * 10) - 9
+    real_frame_no = (frame_sample_no * 60) - 59
     label = 0
 
     try:
